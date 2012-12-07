@@ -28,7 +28,14 @@ cd civicrm-upgrade-test
 cp civicrm-upgrade-test.settings.txt civicrm-upgrade-test.settings
 vi civicrm-upgrade-test.settings
 ## Note: The file will include comments on the configuration options
+```
 
-## Run the script
-bash civicrm-upgrade-test
+### Usage
+
+```bash
+## Run the script with a single database
+bash civicrm-upgrade-test databases/4.2.0-setupsh.sql.bz2
+
+## Run the script with all databases
+bash civicrm-upgrade-test databases/*.sql.bz2
 ```

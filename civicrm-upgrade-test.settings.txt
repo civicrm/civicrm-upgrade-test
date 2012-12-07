@@ -7,8 +7,5 @@ WEB_ROOT=/Applications/MAMP/htdocs
 ## The MySQL database which stores CiviCRM
 TEST_DATABASE=civi
 
-## The directory which contains *.sql.bz2 files for example DBs
-DATABASE_DIR="$SCRIPT_DIR/databases"
-
 ## The directory which stores output from each test run
 OUTPUT_DIR="$SCRIPT_DIR/output"

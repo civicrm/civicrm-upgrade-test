@@ -18,6 +18,10 @@ function abspath {
     fi
 }
 
+function showHelp {
+      echo "usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] <file1.sql.bz2> <file2.sql.bz2> ..."
+}
+
 #####################################################################
 ## Load options
 
@@ -29,14 +33,11 @@ else
   echo "Warning: Could not find $SCRIPT_DIR/civicrm-upgrade-test.settings"
 fi
 
+DATABASE_FILES=""
 while [ -n "$1" ]; do
   case "$1" in
     --web)
       WEB_ROOT="$2"
-      shift 2
-      ;;
-    --in)
-      DATABASE_DIRS="$2"
       shift 2
       ;;
     --out)
@@ -47,10 +48,13 @@ while [ -n "$1" ]; do
       TEST_DATABASE="$2"
       shift 2
       ;;
-    *)
-      echo "unrecognized: $1"
-      echo "usage: $0 [--in /path/to/database/dumpdir] [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name]"
+    --help)
+      showHelp
       exit 1
+      ;;
+    *)
+      DATABASE_FILES="$DATABASE_FILES $1"
+      shift
       ;;
   esac
 done
@@ -58,17 +62,12 @@ done
 #####################################################################
 ## Validate options
 echo "Web Dir: [$WEB_ROOT]"
-echo "Database Dir: [$DATABASE_DIR]"
 echo "Output Dir: [$OUTPUT_DIR]"
-echo "Database: [$TEST_DATABASE]"
+echo "Database Name: [$TEST_DATABASE]"
 echo ""
 
 if [ ! -d "$WEB_ROOT" ]; then
   echo "Missing or invalid web dir"
-  exit 2
-fi
-if [ ! -d "$DATABASE_DIR" ]; then
-  echo "Missing or invalid database dir"
   exit 2
 fi
 if [ ! -d "$OUTPUT_DIR" ]; then
@@ -88,6 +87,11 @@ if [ -z "$TEST_DATABASE" ]; then
   echo "Missing or invalid database name"
   exit 2
 fi
+if [ -z "$DATABASE_FILES" ]; then
+  echo "Missing list of database backup files (*.sql.bz2)"
+  showHelp
+  exit 2
+fi
 
 #####################################################################
 ## Run upgrades
@@ -97,15 +101,15 @@ else
   DRUSH="drush"
 fi
 
-cd "$WEB_ROOT"
-for SQLBZ2 in "${DATABASE_DIR}"/*.sql.bz2 ; do
-  echo "Test $SQLBZ2"
+for SQLBZ2 in $DATABASE_FILES ; do
+  echo "Test [$SQLBZ2]"
   NAME=$(basename $SQLBZ2)
 
   echo "drop database $TEST_DATABASE" | mysql
   echo "create database $TEST_DATABASE" | mysql
   bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+  pushd "$WEB_ROOT" > /dev/null
   $DRUSH civicrm-upgrade-db > "${OUTPUT_DIR}/${NAME}.out"
-  exit
+  popd > /dev/null
   echo
 done
