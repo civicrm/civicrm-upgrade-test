@@ -6,8 +6,11 @@ be used for testing upgrade-logic.
 To facilitate testing of many databases, the current script uses the
 command-line based upgrade system (drush) and never uses the web-based UI
 (civicrm/upgrade).  Therefore, it is appropriate for testing the database
-manipulations -- but it does not test the UI aspects of the upgrader (such
-as browser compatibility).
+manipulations. It does not currently test for:
+
+ * Issues in the upgrader web UI (such as browser compatibility)
+ * Issues in the civicrm.settings.php
+ * Issues with setup or compatibility of PHP, MySQL, etc
 
 ### Pre-Requisites
 
