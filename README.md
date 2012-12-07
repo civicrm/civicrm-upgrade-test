@@ -25,7 +25,7 @@ manipulations. It does not currently test for:
 ```bash
 ## Checkout the repo
 cd $HOME
-git clone git://github.com/totten/civicrm-upgrade-test.git
+git clone git://github.com/civicrm/civicrm-upgrade-test.git
 
 ## Create and edit a settings file
 cd civicrm-upgrade-test
