@@ -1,0 +1,14 @@
+## The base directory of the test installation
+WEB_ROOT=/Applications/MAMP/htdocs
+
+## (For Drupal multisite) Specify the name of the Drupal site
+# DRUPAL_SITE=test.localhost
+
+## The MySQL database which stores CiviCRM
+TEST_DATABASE=civi
+
+## The directory which contains *.sql.bz2 files for example DBs
+DATABASE_DIR="$SCRIPT_DIR/databases"
+
+## The directory which stores output from each test run
+OUTPUT_DIR="$SCRIPT_DIR/output"

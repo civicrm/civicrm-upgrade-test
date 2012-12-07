@@ -1,0 +1,111 @@
+#!/bin/bash
+
+## Determine the absolute path to a directory or file
+function abspath {
+    if [[ -d "$1" ]]
+    then
+        pushd "$1" >/dev/null
+        pwd
+        popd >/dev/null
+    elif [[ -e $1 ]]
+    then
+        pushd "$(dirname "$1")" >/dev/null
+        echo "$(pwd)/$(basename "$1")"
+        popd >/dev/null
+    else
+        echo "$1" does not exist! >&2
+        return 127
+    fi
+}
+
+#####################################################################
+## Load options
+
+SCRIPT_PATH=$(abspath "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+if [ -f "$SCRIPT_DIR/civicrm-upgrade-test.settings" ]; then 
+  source "$SCRIPT_DIR/civicrm-upgrade-test.settings"
+else
+  echo "Warning: Could not find $SCRIPT_DIR/civicrm-upgrade-test.settings"
+fi
+
+while [ -n "$1" ]; do
+  case "$1" in
+    --web)
+      WEB_ROOT="$2"
+      shift 2
+      ;;
+    --in)
+      DATABASE_DIRS="$2"
+      shift 2
+      ;;
+    --out)
+      OUTPUT_DIR="$2"
+      shift 2
+      ;;
+    --db)
+      TEST_DATABASE="$2"
+      shift 2
+      ;;
+    *)
+      echo "unrecognized: $1"
+      echo "usage: $0 [--in /path/to/database/dumpdir] [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name]"
+      exit 1
+      ;;
+  esac
+done
+
+#####################################################################
+## Validate options
+echo "Web Dir: [$WEB_ROOT]"
+echo "Database Dir: [$DATABASE_DIR]"
+echo "Output Dir: [$OUTPUT_DIR]"
+echo "Database: [$TEST_DATABASE]"
+echo ""
+
+if [ ! -d "$WEB_ROOT" ]; then
+  echo "Missing or invalid web dir"
+  exit 2
+fi
+if [ ! -d "$DATABASE_DIR" ]; then
+  echo "Missing or invalid database dir"
+  exit 2
+fi
+if [ ! -d "$OUTPUT_DIR" ]; then
+  #echo "Missing or invalid output dir"
+  #exit 2
+  if [ -z "$OUTPUT_DIR" ]; then
+    echo "Missing output dir"
+    exit
+  elif mkdir -p "$OUTPUT_DIR" ; then
+    echo "Created output dir"
+  else
+    echo "Failed to make output dir"
+    exit
+  fi
+fi
+if [ -z "$TEST_DATABASE" ]; then
+  echo "Missing or invalid database name"
+  exit 2
+fi
+
+#####################################################################
+## Run upgrades
+if [ -n "$DRUPAL_SITE" ]; then
+  DRUSH="drush -l $DRUPAL_SITE"
+else
+  DRUSH="drush"
+fi
+
+cd "$WEB_ROOT"
+for SQLBZ2 in "${DATABASE_DIR}"/*.sql.bz2 ; do
+  echo "Test $SQLBZ2"
+  NAME=$(basename $SQLBZ2)
+
+  echo "drop database $TEST_DATABASE" | mysql
+  echo "create database $TEST_DATABASE" | mysql
+  bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+  $DRUSH civicrm-upgrade-db > "${OUTPUT_DIR}/${NAME}.out"
+  exit
+  echo
+done
