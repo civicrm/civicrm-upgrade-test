@@ -27,7 +27,7 @@ function showHelp {
 
 SCRIPT_PATH=$(abspath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
-if [ -f "$SCRIPT_DIR/civicrm-upgrade-test.settings" ]; then 
+if [ -f "$SCRIPT_DIR/civicrm-upgrade-test.settings" ]; then
   source "$SCRIPT_DIR/civicrm-upgrade-test.settings"
 else
   echo "Warning: Could not find $SCRIPT_DIR/civicrm-upgrade-test.settings"
@@ -64,7 +64,6 @@ done
 echo "Web Dir: [$WEB_ROOT]"
 echo "Output Dir: [$OUTPUT_DIR]"
 echo "Database Name: [$TEST_DATABASE]"
-echo ""
 
 if [ ! -d "$WEB_ROOT" ]; then
   echo "Missing or invalid web dir"
@@ -102,14 +101,34 @@ else
 fi
 
 for SQLBZ2 in $DATABASE_FILES ; do
-  echo "Test [$SQLBZ2]"
   NAME=$(basename $SQLBZ2)
+  OUTPUT="${OUTPUT_DIR}/${NAME}.out"
+
+  echo ""
+  echo "------------------------------------------------------"
+  echo "Input [$SQLBZ2]"
+  echo "Output [$OUTPUT]"
 
   echo "drop database $TEST_DATABASE" | mysql
   echo "create database $TEST_DATABASE" | mysql
   bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
   pushd "$WEB_ROOT" > /dev/null
-  $DRUSH civicrm-upgrade-db > "${OUTPUT_DIR}/${NAME}.out"
+  $DRUSH civicrm-upgrade-db > "$OUTPUT"
   popd > /dev/null
   echo
+done
+
+#####################################################################
+## Report status
+
+echo "------------------------------------------------------"
+echo "Summary"
+for SQLBZ2 in $DATABASE_FILES ; do
+  NAME=$(basename $SQLBZ2)
+  OUTPUT="${OUTPUT_DIR}/${NAME}.out"
+  if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
+    echo "$NAME	OK"
+  else
+    echo "$NAME	ERROR"
+  fi
 done
