@@ -1,3 +1,5 @@
+## CiviCRM Upgrade Test Suite
+
 The civicrm-upgrade-test suite provides a set of sample databases which can
 be used for testing upgrade-logic.
 
