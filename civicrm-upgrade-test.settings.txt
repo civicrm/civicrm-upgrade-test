@@ -4,7 +4,10 @@ WEB_ROOT=/Applications/MAMP/htdocs
 ## (For Drupal multisite) Specify the name of the Drupal site
 # DRUPAL_SITE=test.localhost
 
-## The MySQL database which stores CiviCRM
+## The MySQL database used by your pre-existing CiviCRM install.
+## The database should already be configured for use with
+## CiviCRM+Drupal+Drush. The tables will be dropped and recreated
+## (based on the test data sets).
 TEST_DATABASE=civi
 
 ## The directory which stores output from each test run
