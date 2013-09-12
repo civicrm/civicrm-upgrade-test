@@ -135,16 +135,25 @@ fi
 for SQLBZ2 in $DATABASE_FILES ; do
   NAME=$(basename $SQLBZ2)
   OUTPUT="${OUTPUT_DIR}/${NAME}.out"
+  LOG="${OUTPUT_DIR}/${NAME}.log"
+  if [ -z "$DRUPAL_SITE" ]; then
+    LOGPAT="$WEB_ROOT/sites/default/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+  else
+    LOGPAT="$WEB_ROOT/sites/$DRUPAL_SITE/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+  fi
 
   echo ""
   echo "------------------------------------------------------"
   echo "Input [$SQLBZ2]"
-  echo "Output [$OUTPUT]"
+  echo "Output [$OUTPUT] [$LOG]"
 
   drop_civicrm_sql $TEST_DATABASE
   bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
   pushd "$WEB_ROOT" > /dev/null
+  rm -f $LOGPAT
   $DRUSH civicrm-upgrade-db > "$OUTPUT" 2>&1
+  echo "LOGPAT: $LOGPAT" > $LOG
+  cat $LOGPAT >> $LOG
   popd > /dev/null
   echo
 done
@@ -179,15 +188,22 @@ if [ -n "$JUNIT_XML" ]; then
   echo "<testsuite tests=\"$COUNT\">" >> "$JUNIT_XML"
 
   for SQLBZ2 in $DATABASE_FILES ; do
-    NAME=$(basename $SQLBZ2 | sed 's/\./_/g')
+    NAME=$(basename $SQLBZ2)
     OUTPUT="${OUTPUT_DIR}/${NAME}.out"
+    LOG="${OUTPUT_DIR}/${NAME}.log"
+    JUNITNAME=$(basename $SQLBZ2 | sed 's/\./_/g')
     ## Note: Similar lines of code for "Summary (Console)" and "Summary (JUnit)"
     if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
-      echo "  <testcase class=\"civicrm-upgrade-test\" name=\"$NAME\" />" >> "$JUNIT_XML"
+      echo "  <testcase class=\"CivicrmUpgradeTest\" name=\"CivicrmUpgradeTest.${JUNITNAME}\" />" >> "$JUNIT_XML"
     else
-      echo "  <testcase class=\"civicrm-upgrade-test\" name=\"$NAME\">" >> "$JUNIT_XML"
+      echo "  <testcase class=\"CivicrmUpgradeTest\" name=\"CivicrmUpgradeTest.${JUNITNAME}\">" >> "$JUNIT_XML"
       echo "    <failure type=\"UnexpectedOutput\">" >> "$JUNIT_XML"
+      echo "---- CONSOLE OUTPUT: ----">> "$JUNIT_XML"
       php -r 'echo htmlspecialchars(file_get_contents("php://stdin"));' < $OUTPUT >> "$JUNIT_XML"
+      echo "" >> "$JUNIT_XML"
+      echo "" >> "$JUNIT_XML"
+      echo "---- LOG OUTPUT: ----" >> "$JUNIT_XML"
+      php -r 'echo htmlspecialchars(file_get_contents("php://stdin"));' < $LOG >> "$JUNIT_XML"
       echo "    </failure>" >> "$JUNIT_XML"
       echo "  </testcase>" >> "$JUNIT_XML"
     fi
