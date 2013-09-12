@@ -19,7 +19,7 @@ function abspath {
 }
 
 function showHelp {
-      echo "usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] <file1.sql.bz2> <file2.sql.bz2> ..."
+      echo "usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
 }
 
 #####################################################################
@@ -46,6 +46,10 @@ while [ -n "$1" ]; do
       ;;
     --db)
       TEST_DATABASE="$2"
+      shift 2
+      ;;
+    --junit-xml)
+      JUNIT_XML="$2"
       shift 2
       ;;
     --help)
@@ -113,22 +117,51 @@ for SQLBZ2 in $DATABASE_FILES ; do
   echo "create database $TEST_DATABASE" | mysql
   bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
   pushd "$WEB_ROOT" > /dev/null
-  $DRUSH civicrm-upgrade-db > "$OUTPUT"
+  $DRUSH civicrm-upgrade-db > "$OUTPUT" 2>&1
   popd > /dev/null
   echo
 done
 
 #####################################################################
-## Report status
+## Summary (Console)
 
 echo "------------------------------------------------------"
 echo "Summary"
 for SQLBZ2 in $DATABASE_FILES ; do
   NAME=$(basename $SQLBZ2)
   OUTPUT="${OUTPUT_DIR}/${NAME}.out"
+  ## Note: Similar lines of code for "Summary (Console)" and "Summary (JUnit)"
   if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
     echo "$NAME	OK"
   else
     echo "$NAME	ERROR"
   fi
 done
+
+#####################################################################
+## Summary (JUnit)
+
+if [ -n "$JUNIT_XML" ]; then
+  echo "------------------------------------------------------"
+  echo "Generate JUnit XML"
+  COUNT=$(echo "$DATABASE_FILES" | wc -w)
+  echo > "$JUNIT_XML"
+  echo "<testsuite tests=\"$COUNT\">" >> "$JUNIT_XML"
+
+  for SQLBZ2 in $DATABASE_FILES ; do
+    NAME=$(basename $SQLBZ2)
+    OUTPUT="${OUTPUT_DIR}/${NAME}.out"
+    ## Note: Similar lines of code for "Summary (Console)" and "Summary (JUnit)"
+    if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
+      echo "<testcase class=\"civicrm-upgrade-test\" name=\"$SQLBZ2\" />" >> "$JUNIT_XML"
+    else
+      echo "<testcase class=\"civicrm-upgrade-test\" name=\"$SQLBZ2\">" >> "$JUNIT_XML"
+      echo "  <failure type=\"UnexpectedOutput\">" >> "$JUNIT_XML"
+      php -r 'echo htmlspecialchars(file_get_contents("php://stdin"));' < $OUTPUT >> "$JUNIT_XML"
+      echo "  </failure>" >> "$JUNIT_XML"
+      echo "</testcase>" >> "$JUNIT_XML"
+    fi
+  done
+
+  echo "</testsuite>" >> "$JUNIT_XML"
+fi
