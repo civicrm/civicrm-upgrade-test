@@ -19,7 +19,6 @@ manipulations. It does not currently test for:
 
  * Have a Unix-like environment (bash)
  * Install Drupal 7, CiviCRM, and Drush
- * Use separate databases for Drupal and CiviCRM
  * Configure the username/password for a MySQL administrator in  ~/.my.cnf 
 
 ### Setup

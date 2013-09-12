@@ -22,6 +22,34 @@ function showHelp {
       echo "usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
 }
 
+## Drop all tables, views, etc
+function drop_civicrm_sql {
+  DBNAME="$1"
+  MYSQLCMD="mysql $DBNAME"
+
+  echo; echo "Dropping civicrm_* views from database $DBNAME"
+  echo "SELECT table_name FROM information_schema.TABLES  WHERE TABLE_SCHEMA='${DBNAME}' AND TABLE_TYPE = 'VIEW'" \
+    | $MYSQLCMD \
+    | grep '^\(civicrm_\|log_civicrm_\)' \
+    | awk -v NOFOREIGNCHECK='SET FOREIGN_KEY_CHECKS=0;' 'BEGIN {print NOFOREIGNCHECK}{print "drop view " $1 ";"}' \
+    | $MYSQLCMD
+
+  echo; echo "Dropping civicrm_* tables from database $DBNAME"
+  echo "SELECT table_name FROM information_schema.TABLES  WHERE TABLE_SCHEMA='${DBNAME}' AND TABLE_TYPE = 'BASE TABLE'" \
+    | $MYSQLCMD \
+    | grep '^\(civicrm_\|log_civicrm_\)' \
+    | awk -v NOFOREIGNCHECK='SET FOREIGN_KEY_CHECKS=0;' 'BEGIN {print NOFOREIGNCHECK}{print "drop table " $1 ";"}' \
+    | $MYSQLCMD
+  ## This should also kill associated triggers
+
+  echo; echo "Dropping civicrm_* functions from database $DBNAME"
+  echo "SELECT SPECIFIC_NAME FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA = '${DBNAME}' AND ROUTINE_TYPE = 'FUNCTION';" \
+    | $MYSQLCMD \
+    | grep '^\(civicrm_\|log_civicrm_\)' \
+    | awk -v NOFOREIGNCHECK='SET FOREIGN_KEY_CHECKS=0;' 'BEGIN {print NOFOREIGNCHECK}{print "drop function " $1 ";"}' \
+    | $MYSQLCMD
+}
+
 #####################################################################
 ## Load options
 
@@ -113,8 +141,7 @@ for SQLBZ2 in $DATABASE_FILES ; do
   echo "Input [$SQLBZ2]"
   echo "Output [$OUTPUT]"
 
-  echo "drop database $TEST_DATABASE" | mysql
-  echo "create database $TEST_DATABASE" | mysql
+  drop_civicrm_sql $TEST_DATABASE
   bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
   pushd "$WEB_ROOT" > /dev/null
   $DRUSH civicrm-upgrade-db > "$OUTPUT" 2>&1
