@@ -1,0 +1,30 @@
+#!/bin/bash
+
+## Wrapper for "civicrm-upgrade-test" to be used with Jenkins
+
+if [ -z "$EXECUTOR_NUMBER" -o -z "$WORKSPACE" ]; then
+  echo "This script requires the following environment variables:"
+  echo "EXECUTOR_NUMBER"
+  echo "WORKSPACE"
+  exit 1
+fi
+
+## Configuration
+OUTPUT="${WORKSPACE}/build"
+DRUPAL_ROOT="/var/www/drupal"
+SITE_URL="jenkins-${EXECUTOR_NUMBER}.localhost"
+SITE_DB="jenkins_${EXECUTOR_NUMBER}"
+export CIVICRM_LOCALES=en_US,fr_FR
+
+## Prepare workspace
+bash "${WORKSPACE}/civicrm/tools/scripts/mk-drupal-test-site" "${SITE_URL}" "${SITE_DB}" "${DRUPAL_ROOT}" "${WORKSPACE}/civicrm/"
+
+## Run tests
+pushd "${WORKSPACE}/civicrm-upgrade-test"
+  ## Define values required in civicrm-upgrade-test.settings
+  export WEB_ROOT="$DRUPAL_ROOT"
+  export DRUPAL_SITE="$SITE_URL"
+  export TEST_DATABASE="$SITE_DB"
+  export OUTPUT_DIR="${WORKSPACE}/build"
+  ./civicrm-upgrade-test "$@"
+popd
