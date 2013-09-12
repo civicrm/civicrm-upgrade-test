@@ -177,7 +177,7 @@ if [ -n "$JUNIT_XML" ]; then
   echo "<testsuite tests=\"$COUNT\">" >> "$JUNIT_XML"
 
   for SQLBZ2 in $DATABASE_FILES ; do
-    NAME=$(basename $SQLBZ2)
+    NAME=$(basename $SQLBZ2 | sed 's/\./_/g')
     OUTPUT="${OUTPUT_DIR}/${NAME}.out"
     ## Note: Similar lines of code for "Summary (Console)" and "Summary (JUnit)"
     if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
