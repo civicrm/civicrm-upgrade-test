@@ -50,6 +50,21 @@ function drop_civicrm_sql {
     | $MYSQLCMD
 }
 
+## usage: ERROR=$(check_error <console-output-file> <log-output-file>)
+function check_error {
+  OUTPUT="$1"
+  LOG="$2"
+  ## Checkout OUTPUT
+  if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
+    ## Check log
+    if grep '\[info\] $backTrace' "$LOG" > /dev/null ; then
+      echo 1
+    fi
+  else
+    echo 1
+  fi
+}
+
 #####################################################################
 ## Load options
 
@@ -166,8 +181,10 @@ echo "Summary"
 for SQLBZ2 in $DATABASE_FILES ; do
   NAME=$(basename $SQLBZ2)
   OUTPUT="${OUTPUT_DIR}/${NAME}.out"
-  ## Note: Similar lines of code for "Summary (Console)" and "Summary (JUnit)"
-  if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
+  LOG="${OUTPUT_DIR}/${NAME}.log"
+  ERROR=$(check_error "$OUTPUT" "$LOG")
+
+  if [ -z "$ERROR" ]; then
     echo "$NAME	OK"
   else
     echo "$NAME	ERROR"
@@ -192,8 +209,9 @@ if [ -n "$JUNIT_XML" ]; then
     OUTPUT="${OUTPUT_DIR}/${NAME}.out"
     LOG="${OUTPUT_DIR}/${NAME}.log"
     JUNITNAME=$(basename $SQLBZ2 | sed 's/\./_/g')
-    ## Note: Similar lines of code for "Summary (Console)" and "Summary (JUnit)"
-    if head -n1 "$OUTPUT" | grep '^Upgrade output' > /dev/null ; then
+    ERROR=$(check_error "$OUTPUT" "$LOG")
+
+    if [ -z "$ERROR" ]; then
       echo "  <testcase class=\"CivicrmUpgradeTest\" name=\"CivicrmUpgradeTest.${JUNITNAME}\" />" >> "$JUNIT_XML"
     else
       echo "  <testcase class=\"CivicrmUpgradeTest\" name=\"CivicrmUpgradeTest.${JUNITNAME}\">" >> "$JUNIT_XML"
