@@ -19,7 +19,17 @@ function abspath {
 }
 
 function showHelp {
-      echo "usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
+      echo "Usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
+      echo
+      echo "(Note: Settings may be loaded from $SCRIPT_CFG)"
+}
+
+function usageError {
+  echo
+  echo "ERROR: $@"
+  echo
+  showHelp
+  exit 2
 }
 
 ## Drop all tables, views, etc
@@ -70,10 +80,9 @@ function check_error {
 
 SCRIPT_PATH=$(abspath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
-if [ -f "$SCRIPT_DIR/civicrm-upgrade-test.settings" ]; then
-  source "$SCRIPT_DIR/civicrm-upgrade-test.settings"
-else
-  echo "Warning: Could not find $SCRIPT_DIR/civicrm-upgrade-test.settings"
+SCRIPT_CFG="$SCRIPT_DIR/civicrm-upgrade-test.settings"
+if [ -f "$SCRIPT_CFG" ]; then
+  source $SCRIPT_CFG
 fi
 
 DATABASE_FILES=""
@@ -113,30 +122,24 @@ echo "Output Dir: [$OUTPUT_DIR]"
 echo "Database Name: [$TEST_DATABASE]"
 
 if [ ! -d "$WEB_ROOT" ]; then
-  echo "Missing or invalid web dir"
-  exit 2
+  usageError "Missing or invalid web dir"
 fi
 if [ ! -d "$OUTPUT_DIR" ]; then
   #echo "Missing or invalid output dir"
   #exit 2
   if [ -z "$OUTPUT_DIR" ]; then
-    echo "Missing output dir"
-    exit
+    usageError "Missing output dir"
   elif mkdir -p "$OUTPUT_DIR" ; then
     echo "Created output dir"
   else
-    echo "Failed to make output dir"
-    exit
+    usageError "Failed to make output dir"
   fi
 fi
 if [ -z "$TEST_DATABASE" ]; then
-  echo "Missing or invalid database name"
-  exit 2
+  usageError "Missing or invalid database name"
 fi
 if [ -z "$DATABASE_FILES" ]; then
-  echo "Missing list of database backup files (*.sql.bz2)"
-  showHelp
-  exit 2
+  usageError "Missing list of database backup files (*.sql.bz2)"
 fi
 
 #####################################################################
