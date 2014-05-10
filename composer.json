@@ -1,0 +1,13 @@
+{
+    "name": "civicrm/upgrade-test",
+    "description": "Collection of scripts and data-files for testing CiviCRM upgrades",
+    "homepage": "https://github.com/civicrm/civicrm-upgrade-test",
+    "license": "AGPL-3.0",
+    "bin": ["civicrm-upgrade-test"],
+    "authors": [
+        {
+            "name": "Tim Otten",
+            "email": "to-git@think.hm"
+        }
+    ]
+}
