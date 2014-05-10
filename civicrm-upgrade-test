@@ -166,7 +166,16 @@ for SQLBZ2 in $DATABASE_FILES ; do
   echo "Output [$OUTPUT] [$LOG]"
 
   drop_civicrm_sql $TEST_DATABASE
-  bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+  if [[ "$SQLBZ2" == *sql.bz2 ]]; then
+    bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+  elif [[ "$SQLBZ2" == *sql.gz ]]; then
+    gzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+  elif [[ "$SQLBZ2" == *sql ]]; then
+    mysql "$TEST_DATABASE" < "$SQLBZ2"
+  else
+    echo "Unrecognized file extension [$SQLBZ2]"
+    exit 2
+  fi
   pushd "$WEB_ROOT" > /dev/null
   rm -f $LOGPAT
   $DRUSH civicrm-upgrade-db > "$OUTPUT" 2>&1
