@@ -167,9 +167,9 @@ for SQLBZ2 in $DATABASE_FILES ; do
 
   drop_civicrm_sql $TEST_DATABASE
   if [[ "$SQLBZ2" == *sql.bz2 ]]; then
-    bzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+    bzip2 -d -c "$SQLBZ2" | mysql "$TEST_DATABASE"
   elif [[ "$SQLBZ2" == *sql.gz ]]; then
-    gzcat "$SQLBZ2" | mysql "$TEST_DATABASE"
+    gzip -d -c "$SQLBZ2" | mysql "$TEST_DATABASE"
   elif [[ "$SQLBZ2" == *sql ]]; then
     mysql "$TEST_DATABASE" < "$SQLBZ2"
   else
