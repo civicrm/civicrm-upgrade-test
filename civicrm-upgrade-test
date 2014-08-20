@@ -19,7 +19,7 @@ function abspath {
 }
 
 function showHelp {
-      echo "Usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
+      echo "Usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--db-args '-uuser -ppass dbname'] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
       echo
       echo "(Note: To run all tests up-through version X, use @, e.g.: $0 @4.4)"
       echo "(Note: Settings may be loaded from $SCRIPT_CFG)"
