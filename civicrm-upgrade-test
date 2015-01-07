@@ -118,8 +118,9 @@ while [ -n "$1" ]; do
         case "$1" in
           @4.3|@4.3.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3*" ;;
           @4.4|@4.4.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4*" ;;
-          @4.5|@4.5.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4*" ;; ## FIXME: 4.5*
-          @master)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4*" ;; ## FIXME: 4.5*
+          @4.5|@4.5.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4* 4.5*" ;;
+          @4.6|@4.6.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4* 4.5*" ;; ## FIXME: 4.6*
+          @master)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4* 4.5*" ;; ## FIXME: 4.6*
           *)      echo "UpgradeTest failed: Unrecognized version ($CIVIVER)" ; exit 1; ;;
         esac
       else
