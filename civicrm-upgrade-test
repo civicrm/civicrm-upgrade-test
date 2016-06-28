@@ -36,29 +36,28 @@ function usageError {
 ## Drop all tables, views, etc
 function drop_civicrm_sql {
   DBNAME="$TEST_DATABASE"
-  MYSQLCMD="mysql $TEST_DATABASE_ARGS"
 
   echo; echo "Dropping civicrm_* views from database $DBNAME"
   echo "SELECT table_name FROM information_schema.TABLES  WHERE TABLE_SCHEMA='${DBNAME}' AND TABLE_TYPE = 'VIEW'" \
-    | $MYSQLCMD \
+    | eval mysql $TEST_DATABASE_ARGS \
     | grep '^\(civicrm_\|log_civicrm_\)' \
     | awk -v NOFOREIGNCHECK='SET FOREIGN_KEY_CHECKS=0;' 'BEGIN {print NOFOREIGNCHECK}{print "drop view " $1 ";"}' \
-    | $MYSQLCMD
+    | eval mysql $TEST_DATABASE_ARGS
 
   echo; echo "Dropping civicrm_* tables from database $DBNAME"
   echo "SELECT table_name FROM information_schema.TABLES  WHERE TABLE_SCHEMA='${DBNAME}' AND TABLE_TYPE = 'BASE TABLE'" \
-    | $MYSQLCMD \
+    | eval mysql $TEST_DATABASE_ARGS \
     | grep '^\(civicrm_\|log_civicrm_\)' \
     | awk -v NOFOREIGNCHECK='SET FOREIGN_KEY_CHECKS=0;' 'BEGIN {print NOFOREIGNCHECK}{print "drop table " $1 ";"}' \
-    | $MYSQLCMD
+    | eval mysql $TEST_DATABASE_ARGS
   ## This should also kill associated triggers
 
   echo; echo "Dropping civicrm_* functions from database $DBNAME"
   echo "SELECT SPECIFIC_NAME FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA = '${DBNAME}' AND ROUTINE_TYPE = 'FUNCTION';" \
-    | $MYSQLCMD \
+    | eval mysql $TEST_DATABASE_ARGS \
     | grep '^\(civicrm_\|log_civicrm_\)' \
     | awk -v NOFOREIGNCHECK='SET FOREIGN_KEY_CHECKS=0;' 'BEGIN {print NOFOREIGNCHECK}{print "drop function " $1 ";"}' \
-    | $MYSQLCMD
+    | eval mysql $TEST_DATABASE_ARGS
 }
 
 ## usage: ERROR=$(check_error <console-output-file> <log-output-file>)
@@ -187,11 +186,11 @@ for SQLBZ2 in $DATABASE_FILES ; do
   drop_civicrm_sql
   echo; echo "Loading database $TEST_DATABASE"
   if [[ "$SQLBZ2" == *sql.bz2 ]]; then
-    bzip2 -d -c "$SQLBZ2" | mysql $TEST_DATABASE_ARGS
+    bzip2 -d -c "$SQLBZ2" | eval mysql $TEST_DATABASE_ARGS
   elif [[ "$SQLBZ2" == *sql.gz ]]; then
-    gzip -d -c "$SQLBZ2" | mysql $TEST_DATABASE_ARGS
+    gzip -d -c "$SQLBZ2" | eval mysql $TEST_DATABASE_ARGS
   elif [[ "$SQLBZ2" == *sql ]]; then
-    mysql $TEST_DATABASE_ARGS < "$SQLBZ2"
+    eval mysql $TEST_DATABASE_ARGS < "$SQLBZ2"
   else
     echo "Unrecognized file extension [$SQLBZ2]"
     exit 2
