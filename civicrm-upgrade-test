@@ -21,7 +21,11 @@ function abspath {
 function showHelp {
       echo "Usage: $0 [--out /path/to/output/dir] [--web /path/to/web/root] [--db mysql_database_name] [--db-args '-uuser -ppass dbname'] [--junit-xml /path/to/junit.xml] <file1.sql.bz2> <file2.sql.bz2> ..."
       echo
-      echo "(Note: To run all tests up-through version X, use @, e.g.: $0 @4.4)"
+      echo "Note: To run all tests up-through version X, use @"
+      echo "  - @4.4.0         (All snapshots predating 4.4.0)"
+      echo "  - @4.2..4.7.0    (All snapshots from 4.2 to 4.7.0)"
+      echo "  - @4.2..4.7.0:10 (As above, but returning a maximum of 10)"
+      echo
       echo "(Note: Settings may be loaded from $SCRIPT_CFG)"
 }
 
@@ -114,14 +118,13 @@ while [ -n "$1" ]; do
       ;;
     *)
       if [ "${1:0:1}" == "@" ]; then
-        case "$1" in
-          @4.3|@4.3.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3*" ;;
-          @4.4|@4.4.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4*" ;;
-          @4.5|@4.5.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4* 4.5*" ;;
-          @4.6|@4.6.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4* 4.5* 4.6*" ;;
-          @master|@4.7.*)  DATABASE_FILES="$DATABASE_FILES 4.2* 4.3* 4.4* 4.5* 4.6* 4.7*" ;;
-          *)      echo "UpgradeTest failed: Unrecognized version ($CIVIVER)" ; exit 1; ;;
-        esac
+        echo "[[Parsing $1]]\n";
+        EXTRAS=$(php "$SCRIPT_DIR/util/pickFiles.php" "$1")
+        if [ $? -ne 0 ]; then
+          echo "Failed to evaluate expression \"$1\" => $EXTRAS" >> /dev/stderr
+          exit 1
+        fi
+        DATABASE_FILES="$DATABASE_FILES $EXTRAS"
       else
         DATABASE_FILES="$DATABASE_FILES $1"
       fi
