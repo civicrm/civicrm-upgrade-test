@@ -56,6 +56,10 @@ function main($args) {
         (array) glob($dbDir . $arg)
       );
     }
+    else {
+      help("Unrecognized argument or missing file: $arg\n");
+      exit(3);
+    }
   }
 
   $files = sortFilesByVer(array_unique($files));
