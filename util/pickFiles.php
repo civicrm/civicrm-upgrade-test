@@ -27,6 +27,9 @@ function main($args) {
       help("Unrecognized option: $arg\n");
       return 2;
     }
+    elseif ($arg === '') {
+      // skip
+    }
     elseif (file_exists($arg)) {
       $files[] = $arg;
     }

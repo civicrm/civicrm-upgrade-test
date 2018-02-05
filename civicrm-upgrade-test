@@ -89,7 +89,7 @@ if [ -f "$SCRIPT_CFG" ]; then
   source $SCRIPT_CFG
 fi
 
-DATABASE_FILES=""
+DATABASE_EXPRS=""
 while [ -n "$1" ]; do
   case "$1" in
     --web)
@@ -117,21 +117,19 @@ while [ -n "$1" ]; do
       exit 1
       ;;
     *)
-      if [ "${1:0:1}" == "@" ]; then
-        echo "[[Parsing $1]]\n";
-        EXTRAS=$(php "$SCRIPT_DIR/util/pickFiles.php" "$1")
-        if [ $? -ne 0 ]; then
-          echo "Failed to evaluate expression \"$1\" => $EXTRAS" >> /dev/stderr
-          exit 1
-        fi
-        DATABASE_FILES="$DATABASE_FILES $EXTRAS"
-      else
-        DATABASE_FILES="$DATABASE_FILES $1"
-      fi
+       DATABASE_EXPRS="$DATABASE_EXPRS \"$1\""
       shift
       ;;
   esac
 done
+
+echo "Identify files: [$DATABASE_EXPRS]"
+DATABASE_FILES=$(eval php "$SCRIPT_DIR/util/pickFiles.php" $DATABASE_EXPRS)
+if [ $? -ne 0 ]; then
+  echo "Failed to evaluate expression \"$1\" => $DATABASE_FILES" >> /dev/stderr
+  exit 1
+fi
+echo "$DATABASE_FILES"
 
 #####################################################################
 ## Validate options
