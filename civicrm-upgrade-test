@@ -173,10 +173,14 @@ for SQLBZ2 in $DATABASE_FILES ; do
   NAME=$(basename $SQLBZ2)
   OUTPUT="${OUTPUT_DIR}/${NAME}.out"
   LOG="${OUTPUT_DIR}/${NAME}.log"
-  if [ -z "$DRUPAL_SITE" ]; then
-    LOGPAT="$WEB_ROOT/sites/default/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+  if grep backdrop "$WEB_ROOT/index.php" ; then
+    LOGPAT="$WEB_ROOT/files/civicrm/ConfigAndLog/CiviCRM.*.log"
   else
-    LOGPAT="$WEB_ROOT/sites/$DRUPAL_SITE/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+    if [ -z "$DRUPAL_SITE" ]; then
+      LOGPAT="$WEB_ROOT/sites/default/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+    else
+      LOGPAT="$WEB_ROOT/sites/$DRUPAL_SITE/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+    fi
   fi
 
   echo ""
