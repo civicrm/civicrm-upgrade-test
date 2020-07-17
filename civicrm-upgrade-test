@@ -175,6 +175,8 @@ for SQLBZ2 in $DATABASE_FILES ; do
   LOG="${OUTPUT_DIR}/${NAME}.log"
   if grep backdrop "$WEB_ROOT/index.php" ; then
     LOGPAT="$WEB_ROOT/files/civicrm/ConfigAndLog/CiviCRM.*.log"
+  elif [ -f "$WEB_ROOT/wp-config.php" ] ; then
+    LOGPAT="$WEB_ROOT/wp-content/uploads/civicrm/ConfigAndLog/CiviCRM.*.log"
   else
     if [ -z "$DRUPAL_SITE" ]; then
       LOGPAT="$WEB_ROOT/sites/default/files/civicrm/ConfigAndLog/CiviCRM.*.log"
@@ -203,7 +205,11 @@ for SQLBZ2 in $DATABASE_FILES ; do
   pushd "$WEB_ROOT" > /dev/null
   rm -f $LOGPAT
   echo; echo "Upgrading database $TEST_DATABASE"
-  $DRUSH civicrm-upgrade-db > "$OUTPUT" 2>&1
+  if [ -f "$WEB_ROOT/wp-config.php" ] ; then
+    wp civicrm upgrade-db > "$OUTPUT" 2>&1
+  else
+    $DRUSH civicrm-upgrade-db > "$OUTPUT" 2>&1
+  fi
   echo "LOGPAT: $LOGPAT" > $LOG
   cat $LOGPAT >> $LOG
   popd > /dev/null
