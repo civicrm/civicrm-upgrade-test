@@ -24,7 +24,7 @@ function main($args) {
   while (!empty($args)) {
     $arg = array_shift($args);
 
-    if ($arg{0} === '-') {
+    if ($arg[0] === '-') {
       help("Unrecognized option: $arg\n");
       return 2;
     }
@@ -34,7 +34,7 @@ function main($args) {
     elseif (file_exists($arg)) {
       $files[] = $arg;
     }
-    elseif ($arg{0} === '@') {
+    elseif ($arg[0] === '@') {
       $filters = parseFilterExpr($arg);
 
       $matches = array_filter($allFiles, function($f) use ($filters) {
