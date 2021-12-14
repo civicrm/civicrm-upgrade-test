@@ -245,7 +245,7 @@ if [ -n "$JUNIT_XML" ]; then
   touch "$JUNIT_XML"
   echo '<?xml version="1.0" encoding="UTF-8"?>' >> "$JUNIT_XML"
   echo '<testsuites>' >> "$JUNIT_XML"
-  echo "<testsuite tests=\"$COUNT\">" >> "$JUNIT_XML"
+  echo "<testsuite name=\"CivicrmUpgradeTest\" tests=\"$COUNT\">" >> "$JUNIT_XML"
 
   for SQLBZ2 in $DATABASE_FILES ; do
     NAME=$(basename $SQLBZ2)
