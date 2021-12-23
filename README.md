@@ -18,7 +18,7 @@ manipulations. It does not currently test for:
 ### Pre-Requisites
 
  * Have a Unix-like environment (bash)
- * Install Drupal 7, CiviCRM, and Drush
+ * Install CiviCRM and either Drupal+Drush or WordPress+WP CLI.
  * Configure the username/password for a MySQL administrator in  ~/.my.cnf 
 
 ### Setup
