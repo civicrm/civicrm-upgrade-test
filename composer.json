@@ -6,6 +6,9 @@
     "bin": [
       "bin/civicrm-upgrade-test"
     ],
+    "autoload": {
+      "psr-4": {"Civi\\UpgradeTest\\": "src/"}
+    },
     "authors": [
         {
             "name": "Tim Otten",

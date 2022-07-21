@@ -2,6 +2,8 @@
 <?php
 namespace Civi\UpgradeTest;
 
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
 main($argv);
 
 function help($error = NULL) {
@@ -20,7 +22,6 @@ function help($error = NULL) {
 }
 
 function main($args) {
-  require_once __DIR__ . DIRECTORY_SEPARATOR . 'pickFiles.lib.php';
   $prog = array_shift($args);
   if (empty($args)) {
     help("Missing required argument <fileExpr>\n");
