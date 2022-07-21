@@ -3,11 +3,15 @@ namespace Civi\UpgradeTest;
 
 /**
  * @param string $a
+ *   Filter expression that selects range of test examples.
  *   Ex: '@4.5', '@4.2..4.5', '@4.2..', '@4.5:10'
+ *   Should match this formula:
+ *     '@' [MinVersion '..'] MaxVersion [":" MaxCount]
  * @return array
  *   Array with keys 'minVer', 'maxVer', 'maxCount'.
+ *   Ex: ['minVer' => 4.5, 'maxVer' => NULL, 'maxCount' => 10]
  */
-function parseFilterExpr($a) {
+function parseFilterExpr(string $a): array {
   // old: (\.\d+)*
   $dig = '(\.(?:\d|alpha|beta)+)*';
   //  $a = preg_replace('/\.(alpha|beta)\d*$/', '.0', $a);
@@ -24,7 +28,12 @@ function parseFilterExpr($a) {
   }
 }
 
-function sortFilesByVer($files) {
+/**
+ * @param string[] $files
+ * @return string[]
+ *   List of files, re-sorted.
+ */
+function sortFilesByVer(array $files): array {
   $files = array_unique($files);
   usort($files, function($a, $b) {
     return version_compare(parseFileVer($a), parseFileVer($b));
@@ -33,25 +42,29 @@ function sortFilesByVer($files) {
 }
 
 /**
+ * Extract the version-part of a filename.
+ *
  * @param string $file
  *   Ex: '/path/to/4.2.0-setupsh.sql.bz2'.
  * @return string
  *   Ex: '4.2.0'.
  */
-function parseFileVer($file) {
+function parseFileVer(string $file): string {
   $name = basename($file);
   $parts = explode('-', $name);
   return $parts[0];
 }
 
 /**
+ * Extract the "major.minor" from a version expression.
+ *
  * @param string $ver
  *   Ex: '4.2', '4.2.10'.
  * @return string
  *   Ex: '4.2'
  */
-function parseMajorMinor($ver) {
-  list ($a, $b) = explode('.', $ver);
+function parseMajorMinor(string $ver): string {
+  [$a, $b] = explode('.', $ver);
   return "$a.$b";
 }
 
@@ -59,6 +72,10 @@ function parseMajorMinor($ver) {
  * Pick a subset of elements, including the first element,
  * last element, and random in-between. Try to avoid
  * picking multiple items in the same series.
+ *
+ * @param string[] $files
+ * @param int $maxCount
+ * @return string[]
  */
 function pickSubset($files, $maxCount) {
   $files = sortFilesByVer($files);
