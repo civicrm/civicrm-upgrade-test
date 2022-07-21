@@ -29,7 +29,7 @@ git clone git://github.com/civicrm/civicrm-upgrade-test.git
 
 ## Create and edit a settings file
 cd civicrm-upgrade-test
-cp civicrm-upgrade-test.settings.txt civicrm-upgrade-test.settings
+cp examples/civicrm-upgrade-test.settings.txt civicrm-upgrade-test.settings
 vi civicrm-upgrade-test.settings
 ## Note: The file will include comments on the configuration options
 ```
@@ -38,13 +38,13 @@ vi civicrm-upgrade-test.settings
 
 ```bash
 ## Run the script with a single database
-bash civicrm-upgrade-test databases/4.2.0-setupsh.sql.bz2
+./bin/civicrm-upgrade-test databases/4.2.0-setupsh.sql.bz2
 
 ## Run the script with all databases
-bash civicrm-upgrade-test databases/*.sql.bz2
+./bin/civicrm-upgrade-test databases/*.sql.bz2
 
 ## Run the script with any databases based on CiviCRM 4.0.x or 4.1.x
-bash civicrm-upgrade-test databases/{4.0,4.1}*.sql.bz2
+./bin/civicrm-upgrade-test databases/{4.0,4.1}*.sql.bz2
 ```
 
 After executing any of the above commands, output will be written to the
