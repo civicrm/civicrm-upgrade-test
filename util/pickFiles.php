@@ -27,8 +27,6 @@ function main($args) {
     return 1;
   }
 
-  $allFiles = UpgradeSnapshots::getAll();
-
   $files = array();
   $maxCount = 0;
   while (!empty($args)) {
@@ -44,31 +42,8 @@ function main($args) {
     elseif (file_exists($arg)) {
       $files[] = $arg;
     }
-    elseif ($arg[0] === '@') {
-      $filters = UpgradeSnapshots::parseFilterExpr($arg);
-
-      $matches = array_filter($allFiles, function($f) use ($filters) {
-        $fileVer = UpgradeSnapshots::parseFileVer($f);
-        if ($filters['minVer'] && version_compare($fileVer, $filters['minVer'], '<=')) {
-          return FALSE;
-        }
-        if ($filters['maxVer'] && version_compare($fileVer, $filters['maxVer'], '>=')) {
-          return FALSE;
-        }
-        return TRUE;
-      });
-
-      if ($filters['maxCount'] > 0) {
-        $matches = UpgradeSnapshots::pickSubset($matches, $filters['maxCount']);
-      }
-
-      $files = array_merge($files, $matches);
-    }
-    elseif (strpos($arg, '*')) {
-      $files = array_merge(
-        $files,
-        (array) glob(UpgradeSnapshots::getPath() . DIRECTORY_SEPARATOR . $arg)
-      );
+    elseif ($arg[0] === '@' || strpos($arg, '*')) {
+      $files = array_merge($files, UpgradeSnapshots::find($arg));
     }
     else {
       help("Unrecognized argument or missing file: $arg\n");

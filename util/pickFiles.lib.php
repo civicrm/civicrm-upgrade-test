@@ -24,6 +24,55 @@ class UpgradeSnapshots {
   }
 
   /**
+   * Find all known snapshots that match a filter-expression.
+   *
+   * @param string|string[] $filters
+   *   List of filter expressions.
+   *   Ex: '4.*', '5.0.*'
+   *   Ex: '@4.5', '@4.2..4.5', '@4.2..', '@4.5:10'
+   * @return string[]
+   *   List of snapshots (file-paths).
+   */
+  public static function find($filters): array {
+    $allFiles = UpgradeSnapshots::getAll();
+
+    $filters = (array) $filters;
+    $files = [];
+
+    foreach ($filters as $arg) {
+      if ($arg[0] === '@') {
+        $parsedFilter = UpgradeSnapshots::parseFilterExpr($arg);
+
+        $matches = array_filter($allFiles, function($f) use ($parsedFilter) {
+          $fileVer = UpgradeSnapshots::parseFileVer($f);
+          if ($parsedFilter['minVer'] && version_compare($fileVer, $parsedFilter['minVer'], '<=')) {
+            return FALSE;
+          }
+          if ($parsedFilter['maxVer'] && version_compare($fileVer, $parsedFilter['maxVer'], '>=')) {
+            return FALSE;
+          }
+          return TRUE;
+        });
+
+        if ($parsedFilter['maxCount'] > 0) {
+          $matches = UpgradeSnapshots::pickSubset($matches, $parsedFilter['maxCount']);
+        }
+
+        $files = array_merge($files, $matches);
+      }
+      elseif (strpos($arg, '*')) {
+        $files = array_merge($files,
+          (array) glob(UpgradeSnapshots::getPath() . DIRECTORY_SEPARATOR . $arg));
+      }
+      else {
+        throw new \InvalidArgumentException("Unrecognized filter: $arg");
+      }
+    }
+
+    return $files;
+  }
+
+  /**
    * @param string $a
    *   Filter expression that selects range of test examples.
    *   Ex: '@4.5', '@4.2..4.5', '@4.2..', '@4.5:10'
