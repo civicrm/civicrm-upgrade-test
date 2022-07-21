@@ -34,7 +34,7 @@ composer install
 
 ```bash
 ## Find snapshots from 5.0.0 through 5.30.0
-./bin/civicrm-upgrade-snapshots @5.0.0..5.30.0
+./bin/civicrm-upgrade-examples @5.0.0..5.30.0
 ```
 
 ### Running Test Cases

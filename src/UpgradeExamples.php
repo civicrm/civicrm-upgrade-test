@@ -1,16 +1,16 @@
 <?php
 namespace Civi\UpgradeTest;
 
-class UpgradeSnapshots {
+class UpgradeExamples {
 
   /**
    * Get a default instance (based on the colocated list of snapshot files).
    *
-   * @return \Civi\UpgradeTest\UpgradeSnapshots
+   * @return \Civi\UpgradeTest\UpgradeExamples
    */
-  public static function instance(): UpgradeSnapshots {
+  public static function instance(): UpgradeExamples {
     static $instance;
-    $instance = $instance ?: new UpgradeSnapshots(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases');
+    $instance = $instance ?: new UpgradeExamples(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases');
     return $instance;
   }
 

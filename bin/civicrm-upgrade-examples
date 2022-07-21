@@ -29,7 +29,7 @@ function main($args) {
   }
 
   $files = array();
-  $upgradeSnapshots = UpgradeSnapshots::instance();
+  $examples = UpgradeExamples::instance();
   while (!empty($args)) {
     $arg = array_shift($args);
 
@@ -44,7 +44,7 @@ function main($args) {
       $files[] = $arg;
     }
     elseif ($arg[0] === '@' || strpos($arg, '*')) {
-      $files = array_merge($files, $upgradeSnapshots->find($arg));
+      $files = array_merge($files, $examples->find($arg));
     }
     else {
       help("Unrecognized argument or missing file: $arg\n");
@@ -52,7 +52,7 @@ function main($args) {
     }
   }
 
-  $files = $upgradeSnapshots->sortFilesByVer(array_unique($files));
+  $files = $examples->sortFilesByVer(array_unique($files));
   foreach ($files as $file) {
     echo "$file\n";
   }

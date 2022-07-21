@@ -126,7 +126,7 @@ while [ -n "$1" ]; do
 done
 
 echo "Identify files: [$DATABASE_EXPRS]"
-DATABASE_FILES=$(eval php "$SCRIPT_DIR/civicrm-upgrade-snapshots" $DATABASE_EXPRS)
+DATABASE_FILES=$(eval php "$SCRIPT_DIR/civicrm-upgrade-examples" $DATABASE_EXPRS)
 if [ $? -ne 0 ]; then
   echo "Failed to evaluate expression \"$1\" => $DATABASE_FILES" >> /dev/stderr
   exit 1
