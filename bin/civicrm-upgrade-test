@@ -85,7 +85,8 @@ function check_error {
 
 SCRIPT_PATH=$(abspath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
-SCRIPT_CFG="$SCRIPT_DIR/civicrm-upgrade-test.settings"
+PRJ_DIR=$(dirname "$SCRIPT_DIR")
+SCRIPT_CFG="$PRJ_DIR/civicrm-upgrade-test.settings"
 if [ -f "$SCRIPT_CFG" ]; then
   source $SCRIPT_CFG
 fi
@@ -125,7 +126,7 @@ while [ -n "$1" ]; do
 done
 
 echo "Identify files: [$DATABASE_EXPRS]"
-DATABASE_FILES=$(eval php "$SCRIPT_DIR/util/pickFiles.php" $DATABASE_EXPRS)
+DATABASE_FILES=$(eval php "$SCRIPT_DIR/civicrm-upgrade-examples" $DATABASE_EXPRS)
 if [ $? -ne 0 ]; then
   echo "Failed to evaluate expression \"$1\" => $DATABASE_FILES" >> /dev/stderr
   exit 1

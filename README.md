@@ -26,25 +26,35 @@ manipulations. It does not currently test for:
 ## Checkout the repo
 cd $HOME
 git clone git://github.com/civicrm/civicrm-upgrade-test.git
-
-## Create and edit a settings file
 cd civicrm-upgrade-test
-cp civicrm-upgrade-test.settings.txt civicrm-upgrade-test.settings
-vi civicrm-upgrade-test.settings
-## Note: The file will include comments on the configuration options
+composer install
+```
+
+### Finding Test Cases
+
+```bash
+## Find snapshots from 5.0.0 through 5.30.0
+./bin/civicrm-upgrade-examples @5.0.0..5.30.0
 ```
 
 ### Running Test Cases
 
+```
+## Create and edit a settings file
+cp examples/civicrm-upgrade-test.settings.txt civicrm-upgrade-test.settings
+vi civicrm-upgrade-test.settings
+## Note: The file will include comments on the configuration options
+```
+
 ```bash
 ## Run the script with a single database
-bash civicrm-upgrade-test databases/4.2.0-setupsh.sql.bz2
+./bin/civicrm-upgrade-test databases/4.2.0-setupsh.sql.bz2
 
 ## Run the script with all databases
-bash civicrm-upgrade-test databases/*.sql.bz2
+./bin/civicrm-upgrade-test databases/*.sql.bz2
 
 ## Run the script with any databases based on CiviCRM 4.0.x or 4.1.x
-bash civicrm-upgrade-test databases/{4.0,4.1}*.sql.bz2
+./bin/civicrm-upgrade-test databases/{4.0,4.1}*.sql.bz2
 ```
 
 After executing any of the above commands, output will be written to the

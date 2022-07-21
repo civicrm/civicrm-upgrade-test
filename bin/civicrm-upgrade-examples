@@ -1,0 +1,62 @@
+#!/usr/bin/env php
+<?php
+namespace Civi\UpgradeTest;
+
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+main($argv);
+
+function help($error = NULL) {
+  global $argv;
+  $prog = basename($argv[0]);
+
+  if ($error) {
+    fwrite(STDERR, $error);
+  }
+  echo "usage: $prog <fileExpr> ...\n";
+  echo "\n";
+  echo "<fileExpr> examples:\n";
+  echo "  /var/foo.sql.gz  A specific file\n";
+  echo "  4.5*             All files in the default dir beginning with '4.2'\n";
+  echo "  @4.5             All files in the default dir which are less than 4.5\n";
+  echo "  @4.5.10          All files in the default dir which are less than 4.5.10\n";
+  echo "  @4.2..5.1.0     All files starting at 4.2 and before 5.1.0\n";
+  echo "\n";
+}
+
+function main($args) {
+  $prog = array_shift($args);
+  if (empty($args)) {
+    help("Missing required argument <fileExpr>\n");
+    return 1;
+  }
+
+  $files = array();
+  $examples = UpgradeExamples::instance();
+  while (!empty($args)) {
+    $arg = array_shift($args);
+
+    if ($arg[0] === '-') {
+      help("Unrecognized option: $arg\n");
+      return 2;
+    }
+    elseif ($arg === '') {
+      // skip
+    }
+    elseif (file_exists($arg)) {
+      $files[] = $arg;
+    }
+    elseif ($arg[0] === '@' || strpos($arg, '*')) {
+      $files = array_merge($files, $examples->find($arg));
+    }
+    else {
+      help("Unrecognized argument or missing file: $arg\n");
+      exit(3);
+    }
+  }
+
+  $files = $examples->sortFilesByVer(array_unique($files));
+  foreach ($files as $file) {
+    echo "$file\n";
+  }
+}
