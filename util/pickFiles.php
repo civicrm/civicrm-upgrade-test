@@ -71,4 +71,3 @@ function main($args) {
     echo "$file\n";
   }
 }
-

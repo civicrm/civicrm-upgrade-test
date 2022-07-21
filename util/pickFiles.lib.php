@@ -8,10 +8,10 @@
  */
 function parseFilterExpr($a) {
   // old: (\.\d+)*
-  $dig='(\.(?:\d|alpha|beta)+)*';
-//  $a = preg_replace('/\.(alpha|beta)\d*$/', '.0', $a);
+  $dig = '(\.(?:\d|alpha|beta)+)*';
+  //  $a = preg_replace('/\.(alpha|beta)\d*$/', '.0', $a);
   if (preg_match("/^@((\d+$dig)\.\.)?(\d+$dig)?(:(\d+))?$/", $a, $matches)) {
-//    print_r(['matches'=>$matches]);
+    //    print_r(['matches'=>$matches]);
     return array(
       'minVer' => isset($matches[2]) ? $matches[2] : NULL,
       'maxVer' => isset($matches[4]) ? $matches[4] : NULL,
@@ -77,14 +77,14 @@ function pickSubset($files, $maxCount) {
     $maxCount--;
   }
 
-  $allMajorMinors = array_unique(array_map(function($s){
+  $allMajorMinors = array_unique(array_map(function($s) {
     return parseMajorMinor(parseFileVer($s));
   }, $files));
   $allowDupeMajorMinor = FALSE;
   while ($maxCount > 0) {
     $i = rand(0, count($files) - 1);
 
-    $selectedMajorMinors = array_unique(array_map(function($s){
+    $selectedMajorMinors = array_unique(array_map(function($s) {
       return parseMajorMinor(parseFileVer($s));
     }, $selections));
     $hasAllMajorMinor = count(array_diff($allMajorMinors, $selectedMajorMinors)) == 0;
