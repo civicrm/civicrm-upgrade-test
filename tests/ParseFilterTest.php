@@ -1,4 +1,6 @@
 <?php
+namespace Civi\UpgradeTest;
+
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'util' . DIRECTORY_SEPARATOR . 'pickFiles.lib.php';
 global $assertionCount;
 $assertionCount = ['ok' => 0, 'fail' => 0];

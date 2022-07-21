@@ -1,4 +1,5 @@
 <?php
+namespace Civi\UpgradeTest;
 
 /**
  * @param string $a
