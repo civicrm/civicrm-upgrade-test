@@ -26,15 +26,25 @@ manipulations. It does not currently test for:
 ## Checkout the repo
 cd $HOME
 git clone git://github.com/civicrm/civicrm-upgrade-test.git
-
-## Create and edit a settings file
 cd civicrm-upgrade-test
+composer install
+```
+
+### Finding Test Cases
+
+```bash
+## Find snapshots from 5.0.0 through 5.30.0
+./bin/civicrm-upgrade-snapshots @5.0.0..5.30.0
+```
+
+### Running Test Cases
+
+```
+## Create and edit a settings file
 cp examples/civicrm-upgrade-test.settings.txt civicrm-upgrade-test.settings
 vi civicrm-upgrade-test.settings
 ## Note: The file will include comments on the configuration options
 ```
-
-### Running Test Cases
 
 ```bash
 ## Run the script with a single database
