@@ -27,7 +27,7 @@ function assertEquals($expected, $actual, $message = '') {
 function assertFilterExpr($expected, $filterExpr) {
   global $assertionCount;
   try {
-    $parsed = parseFilterExpr($filterExpr);
+    $parsed = UpgradeSnapshots::parseFilterExpr($filterExpr);
   }
   catch (RuntimeException $e) {
     printf("Exception: %s\n", $e->getMessage());

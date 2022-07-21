@@ -51,10 +51,10 @@ function main($args) {
       $files[] = $arg;
     }
     elseif ($arg[0] === '@') {
-      $filters = parseFilterExpr($arg);
+      $filters = UpgradeSnapshots::parseFilterExpr($arg);
 
       $matches = array_filter($allFiles, function($f) use ($filters) {
-        $fileVer = parseFileVer($f);
+        $fileVer = UpgradeSnapshots::parseFileVer($f);
         if ($filters['minVer'] && version_compare($fileVer, $filters['minVer'], '<=')) {
           return FALSE;
         }
@@ -65,7 +65,7 @@ function main($args) {
       });
 
       if ($filters['maxCount'] > 0) {
-        $matches = pickSubset($matches, $filters['maxCount']);
+        $matches = UpgradeSnapshots::pickSubset($matches, $filters['maxCount']);
       }
 
       $files = array_merge($files, $matches);
@@ -82,7 +82,7 @@ function main($args) {
     }
   }
 
-  $files = sortFilesByVer(array_unique($files));
+  $files = UpgradeSnapshots::sortFilesByVer(array_unique($files));
   foreach ($files as $file) {
     echo "$file\n";
   }
