@@ -15,23 +15,42 @@ class UpgradeSnapshots {
   }
 
   /**
+   * @var string
+   */
+  private $basePath;
+
+  /**
+   * @var string[]|null
+   */
+  private $all;
+
+  /**
+   * @param string $basePath
+   */
+  public function __construct(string $basePath) {
+    $this->basePath = $basePath;
+  }
+
+  /**
    * Get the base-path of the snapshot data.
    *
    * @return string
    */
-  public static function getPath(): string {
-    return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases';
+  public function getBasePath(): string {
+    return $this->basePath;
   }
 
-  public static function getAll(): array {
-    $dbDir = static::getPath() . DIRECTORY_SEPARATOR;
-    $allFiles = array_merge(
-      (array) glob("{$dbDir}*.sql.bz2"),
-      (array) glob("{$dbDir}*.sql.gz"),
-      (array) glob("{$dbDir}*.mysql.bz2"),
-      (array) glob("{$dbDir}*.mysql.gz")
-    );
-    return $allFiles;
+  public function getAll(): array {
+    $dbDir = $this->getBasePath() . DIRECTORY_SEPARATOR;
+    if ($this->all === NULL) {
+      $this->all = array_merge(
+        (array) glob("{$dbDir}*.sql.bz2"),
+        (array) glob("{$dbDir}*.sql.gz"),
+        (array) glob("{$dbDir}*.mysql.bz2"),
+        (array) glob("{$dbDir}*.mysql.gz")
+      );
+    }
+    return $this->all;
   }
 
   /**
@@ -44,18 +63,18 @@ class UpgradeSnapshots {
    * @return string[]
    *   List of snapshots (file-paths).
    */
-  public static function find($filters): array {
-    $allFiles = UpgradeSnapshots::getAll();
+  public function find($filters): array {
+    $allFiles = $this->getAll();
 
     $filters = (array) $filters;
     $files = [];
 
     foreach ($filters as $arg) {
       if ($arg[0] === '@') {
-        $parsedFilter = UpgradeSnapshots::parseFilterExpr($arg);
+        $parsedFilter = $this->parseFilterExpr($arg);
 
         $matches = array_filter($allFiles, function($f) use ($parsedFilter) {
-          $fileVer = UpgradeSnapshots::parseFileVer($f);
+          $fileVer = $this->parseFileVer($f);
           if ($parsedFilter['minVer'] && version_compare($fileVer, $parsedFilter['minVer'], '<=')) {
             return FALSE;
           }
@@ -66,14 +85,14 @@ class UpgradeSnapshots {
         });
 
         if ($parsedFilter['maxCount'] > 0) {
-          $matches = UpgradeSnapshots::pickSubset($matches, $parsedFilter['maxCount']);
+          $matches = $this->pickSubset($matches, $parsedFilter['maxCount']);
         }
 
         $files = array_merge($files, $matches);
       }
       elseif (strpos($arg, '*')) {
         $files = array_merge($files,
-          (array) glob(UpgradeSnapshots::getPath() . DIRECTORY_SEPARATOR . $arg));
+          (array) glob($this->getBasePath() . DIRECTORY_SEPARATOR . $arg));
       }
       else {
         throw new \InvalidArgumentException("Unrecognized filter: $arg");
@@ -93,7 +112,7 @@ class UpgradeSnapshots {
    *   Array with keys 'minVer', 'maxVer', 'maxCount'.
    *   Ex: ['minVer' => 4.5, 'maxVer' => NULL, 'maxCount' => 10]
    */
-  public static function parseFilterExpr(string $a): array {
+  public function parseFilterExpr(string $a): array {
     // old: (\.\d+)*
     $dig = '(\.(?:\d|alpha|beta)+)*';
     //  $a = preg_replace('/\.(alpha|beta)\d*$/', '.0', $a);
@@ -115,10 +134,10 @@ class UpgradeSnapshots {
    * @return string[]
    *   List of files, re-sorted.
    */
-  public static function sortFilesByVer(array $files): array {
+  public function sortFilesByVer(array $files): array {
     $files = array_unique($files);
     usort($files, function($a, $b) {
-      return version_compare(UpgradeSnapshots::parseFileVer($a), UpgradeSnapshots::parseFileVer($b));
+      return version_compare($this->parseFileVer($a), $this->parseFileVer($b));
     });
     return $files;
   }
@@ -131,7 +150,7 @@ class UpgradeSnapshots {
    * @return string
    *   Ex: '4.2.0'.
    */
-  public static function parseFileVer(string $file): string {
+  public function parseFileVer(string $file): string {
     $name = basename($file);
     $parts = explode('-', $name);
     return $parts[0];
@@ -145,7 +164,7 @@ class UpgradeSnapshots {
    * @return string
    *   Ex: '4.2'
    */
-  public static function parseMajorMinor(string $ver): string {
+  public function parseMajorMinor(string $ver): string {
     [$a, $b] = explode('.', $ver);
     return "$a.$b";
   }
@@ -159,8 +178,8 @@ class UpgradeSnapshots {
    * @param int $maxCount
    * @return string[]
    */
-  public static function pickSubset($files, $maxCount) {
-    $files = UpgradeSnapshots::sortFilesByVer($files);
+  public function pickSubset($files, $maxCount) {
+    $files = $this->sortFilesByVer($files);
 
     if ($maxCount >= count($files)) {
       return $files;
@@ -178,17 +197,17 @@ class UpgradeSnapshots {
     }
 
     $allMajorMinors = array_unique(array_map(function($s) {
-      return UpgradeSnapshots::parseMajorMinor(UpgradeSnapshots::parseFileVer($s));
+      return $this->parseMajorMinor($this->parseFileVer($s));
     }, $files));
     $allowDupeMajorMinor = FALSE;
     while ($maxCount > 0) {
       $i = rand(0, count($files) - 1);
 
       $selectedMajorMinors = array_unique(array_map(function($s) {
-        return UpgradeSnapshots::parseMajorMinor(UpgradeSnapshots::parseFileVer($s));
+        return $this->parseMajorMinor($this->parseFileVer($s));
       }, $selections));
       $hasAllMajorMinor = count(array_diff($allMajorMinors, $selectedMajorMinors)) == 0;
-      $myMajorMinor = UpgradeSnapshots::parseMajorMinor(UpgradeSnapshots::parseFileVer($files[$i]));
+      $myMajorMinor = $this->parseMajorMinor($this->parseFileVer($files[$i]));
       if (!$hasAllMajorMinor && in_array($myMajorMinor, $selectedMajorMinors)) {
         continue;
       }
@@ -199,7 +218,7 @@ class UpgradeSnapshots {
       $maxCount--;
     }
 
-    return UpgradeSnapshots::sortFilesByVer($selections);
+    return $this->sortFilesByVer($selections);
   }
 
 }
