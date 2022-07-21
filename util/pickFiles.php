@@ -27,13 +27,7 @@ function main($args) {
     return 1;
   }
 
-  $dbDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases' . DIRECTORY_SEPARATOR;
-  $allFiles = array_merge(
-    (array) glob("{$dbDir}*.sql.bz2"),
-    (array) glob("{$dbDir}*.sql.gz"),
-    (array) glob("{$dbDir}*.mysql.bz2"),
-    (array) glob("{$dbDir}*.mysql.gz")
-  );
+  $allFiles = UpgradeSnapshots::getAll();
 
   $files = array();
   $maxCount = 0;
@@ -73,7 +67,7 @@ function main($args) {
     elseif (strpos($arg, '*')) {
       $files = array_merge(
         $files,
-        (array) glob($dbDir . $arg)
+        (array) glob(UpgradeSnapshots::getPath() . DIRECTORY_SEPARATOR . $arg)
       );
     }
     else {

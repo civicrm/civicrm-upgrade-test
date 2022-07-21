@@ -4,6 +4,26 @@ namespace Civi\UpgradeTest;
 class UpgradeSnapshots {
 
   /**
+   * Get the base-path of the snapshot data.
+   *
+   * @return string
+   */
+  public static function getPath(): string {
+    return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases';
+  }
+
+  public static function getAll(): array {
+    $dbDir = static::getPath() . DIRECTORY_SEPARATOR;
+    $allFiles = array_merge(
+      (array) glob("{$dbDir}*.sql.bz2"),
+      (array) glob("{$dbDir}*.sql.gz"),
+      (array) glob("{$dbDir}*.mysql.bz2"),
+      (array) glob("{$dbDir}*.mysql.gz")
+    );
+    return $allFiles;
+  }
+
+  /**
    * @param string $a
    *   Filter expression that selects range of test examples.
    *   Ex: '@4.5', '@4.2..4.5', '@4.2..', '@4.5:10'
