@@ -4,6 +4,17 @@ namespace Civi\UpgradeTest;
 class UpgradeSnapshots {
 
   /**
+   * Get a default instance (based on the colocated list of snapshot files).
+   *
+   * @return \Civi\UpgradeTest\UpgradeSnapshots
+   */
+  public static function instance(): UpgradeSnapshots {
+    static $instance;
+    $instance = $instance ?: new UpgradeSnapshots(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases');
+    return $instance;
+  }
+
+  /**
    * Get the base-path of the snapshot data.
    *
    * @return string

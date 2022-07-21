@@ -19,7 +19,7 @@ class ParseFilterTest extends \PHPUnit\Framework\TestCase {
   }
 
   protected function assertFilterExpr($expected, $filterExpr) {
-    $parsed = UpgradeSnapshots::parseFilterExpr($filterExpr);
+    $parsed = UpgradeSnapshots::instance()->parseFilterExpr($filterExpr);
     $this->assertEquals($expected, $parsed, "Parsing \"$filterExpr\": ");
   }
 

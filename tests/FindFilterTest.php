@@ -20,7 +20,7 @@ class FindFilterTest extends \PHPUnit\Framework\TestCase {
    * @dataProvider getExamples
    */
   public function testExamples($pattern, array $expectFileNames): void {
-    $actualFilePaths = UpgradeSnapshots::find($pattern);
+    $actualFilePaths = UpgradeSnapshots::instance()->find($pattern);
     foreach ($actualFilePaths as $actualFile) {
       $this->assertTrue(file_exists($actualFile), "Identified file [$actualFile] should exist");
     }
@@ -29,8 +29,8 @@ class FindFilterTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testMaxCount() {
-    $big = UpgradeSnapshots::find('@4.0..4.5');
-    $little = UpgradeSnapshots::find('@4.0..4.5:3');
+    $big = UpgradeSnapshots::instance()->find('@4.0..4.5');
+    $little = UpgradeSnapshots::instance()->find('@4.0..4.5:3');
     $this->assertEquals(3, count($little));
     $this->assertTrue(count($big) > count($little));
     $this->assertEquals($little, array_intersect($little, $big), 'All items in $little are also in $big');
