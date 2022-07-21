@@ -7,10 +7,13 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 main($argv);
 
 function help($error = NULL) {
+  global $argv;
+  $prog = basename($argv[0]);
+
   if ($error) {
     fwrite(STDERR, $error);
   }
-  echo "usage: pickFiles.php <fileExpr> ...\n";
+  echo "usage: $prog <fileExpr> ...\n";
   echo "\n";
   echo "<fileExpr> examples:\n";
   echo "  /var/foo.sql.gz  A specific file\n";
