@@ -102,18 +102,3 @@ function pickSubset($files, $maxCount) {
 
   return sortFilesByVer($selections);
 }
-
-function help($error = NULL) {
-  if ($error) {
-    fwrite(STDERR, $error);
-  }
-  echo "usage: pickFiles.php <fileExpr> ...\n";
-  echo "\n";
-  echo "<fileExpr> examples:\n";
-  echo "  /var/foo.sql.gz  A specific file\n";
-  echo "  4.5*             All files in the default dir beginning with '4.2'\n";
-  echo "  @4.5             All files in the default dir which are less than 4.5\n";
-  echo "  @4.5.10          All files in the default dir which are less than 4.5.10\n";
-  echo "  @4.2..5.1.0     All files starting at 4.2 and before 5.1.0\n";
-  echo "\n";
-}
