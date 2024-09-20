@@ -125,8 +125,15 @@ while [ -n "$1" ]; do
   esac
 done
 
+CIVICRM_UF=$( cv --cwd="$WEB_ROOT" ev 'echo CIVICRM_UF;' )
+
 echo "Identify files: [$DATABASE_EXPRS]"
-DATABASE_FILES=$(eval php "$SCRIPT_DIR/civicrm-upgrade-examples" $DATABASE_EXPRS)
+if [[ "$CIVICRM_UF" == "Standalone" ]]; then
+  echo "Using 'databases_standalone' snapshot library for Standalone"
+  DATABASE_FILES=$(eval php "$SCRIPT_DIR/civicrm-upgrade-examples" --snapshot-library databases_standalone $DATABASE_EXPRS)
+else
+  DATABASE_FILES=$(eval php "$SCRIPT_DIR/civicrm-upgrade-examples" $DATABASE_EXPRS)
+fi
 if [ $? -ne 0 ]; then
   echo "Failed to evaluate expression \"$1\" => $DATABASE_FILES" >> /dev/stderr
   exit 1
