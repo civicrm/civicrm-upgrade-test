@@ -8,10 +8,8 @@ class UpgradeExamples {
    *
    * @return \Civi\UpgradeTest\UpgradeExamples
    */
-  public static function instance(): UpgradeExamples {
-    static $instance;
-    $instance = $instance ?: new UpgradeExamples(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'databases');
-    return $instance;
+  public static function instance(string $basePath = 'databases'): UpgradeExamples {
+    return new UpgradeExamples(dirname(__DIR__) . DIRECTORY_SEPARATOR . $basePath);
   }
 
   /**

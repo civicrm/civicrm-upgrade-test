@@ -28,7 +28,7 @@ function help($error = NULL) {
   if ($error) {
     fwrite(STDERR, $error);
   }
-  echo "usage: $prog <fileExpr> ...\n";
+  echo "usage: $prog (--snapshot-library <folder>) <fileExpr> ...\n";
   echo "\n";
   echo "<fileExpr> examples:\n";
   echo "  /var/foo.sql.gz  A specific file\n";
@@ -46,12 +46,18 @@ function main($args) {
     return 1;
   }
 
-  $files = array();
-  $examples = UpgradeExamples::instance();
+  $files = [];
+  $searchArgs = [];
+  // default value. may be overridden by a --snapshot-library arg
+  $snapshotLibrary = 'databases';
+
   while (!empty($args)) {
     $arg = array_shift($args);
 
-    if ($arg[0] === '-') {
+    if ($arg === '--snapshot-library') {
+        $snapshotLibrary = array_shift($args);
+    }
+    elseif ($arg[0] === '-') {
       help("Unrecognized option: $arg\n");
       return 2;
     }
@@ -62,12 +68,18 @@ function main($args) {
       $files[] = $arg;
     }
     elseif ($arg[0] === '@' || strpos($arg, '*')) {
-      $files = array_merge($files, $examples->find($arg));
+      $searchArgs[] = $arg;
     }
     else {
       help("Unrecognized argument or missing file: $arg\n");
       exit(3);
     }
+  }
+
+  $examples = UpgradeExamples::instance($snapshotLibrary);
+
+  foreach ($searchArgs as $searchArg) {
+    $files = array_merge($files, $examples->find($searchArg));
   }
 
   $files = $examples->sortFilesByVer(array_unique($files));
