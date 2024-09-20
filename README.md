@@ -74,3 +74,12 @@ mysqldump my_civi_db | bzip2 > databases/4.2.3-my_civi_db.sql.bz2
 
 This is not strictly required. If you want to create private test-cases,
 you can store them anywhere and follow your own naming convention.
+
+### Standalone Test Cases
+
+The standard test snapshots do not work on Standalone, as they do not
+contain the required DB state for a Standalone system.
+
+As such, a separate library of Standalone specific snapshots has been
+created in "databases_standalone" directory. This will be used automatically
+by civicrm-upgrade-test when running against a Standalone build.
