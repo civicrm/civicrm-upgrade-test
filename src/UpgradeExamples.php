@@ -41,12 +41,7 @@ class UpgradeExamples {
   public function getAll(): array {
     $dbDir = $this->getBasePath() . DIRECTORY_SEPARATOR;
     if ($this->all === NULL) {
-      $this->all = array_merge(
-        (array) glob("{$dbDir}*.sql.bz2"),
-        (array) glob("{$dbDir}*.sql.gz"),
-        (array) glob("{$dbDir}*.mysql.bz2"),
-        (array) glob("{$dbDir}*.mysql.gz")
-      );
+      $this->all = $this->grepSqlFiles((array) glob("{$dbDir}*"));
     }
     return $this->all;
   }
@@ -90,7 +85,7 @@ class UpgradeExamples {
       }
       elseif (strpos($arg, '*')) {
         $files = array_merge($files,
-          (array) glob($this->getBasePath() . DIRECTORY_SEPARATOR . $arg));
+          $this->grepSqlFiles((array) glob($this->getBasePath() . DIRECTORY_SEPARATOR . $arg)));
       }
       else {
         throw new \InvalidArgumentException("Unrecognized filter: $arg");
@@ -217,6 +212,10 @@ class UpgradeExamples {
     }
 
     return $this->sortFilesByVer($selections);
+  }
+
+  protected function grepSqlFiles(array $items): array {
+    return preg_grep('/\.(mysql|sql)\.(bz2|gz)$/', $items);
   }
 
 }
