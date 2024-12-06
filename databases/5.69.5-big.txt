@@ -1,0 +1,2 @@
+* install drupal-clean
+* cv en civicrm_admin_ui civigrant message_admin oauth_client afform_admin user_dashboard phpstorm scheduled_communications
