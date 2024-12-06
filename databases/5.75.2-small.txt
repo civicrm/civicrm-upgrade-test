@@ -1,0 +1,3 @@
+* install drupal-clean
+* cv ext:uninstall sequentialcreditnotes financialacls ckeditor4
+* disable all components
