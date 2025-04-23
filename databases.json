@@ -1,0 +1,298 @@
+{
+    "databases/4.0.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.0.0-setupsh",
+        "civicrm": "4.0.0",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.0.8-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.0.8-setupsh",
+        "civicrm": "4.0.8",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.1.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.1.0-setupsh",
+        "civicrm": "4.1.0",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.1.6-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.1.6-setupsh",
+        "civicrm": "4.1.6",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.2.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.2.0-setupsh",
+        "civicrm": "4.2.0",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.2.16-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.2.16-setupsh",
+        "civicrm": "4.2.16",
+        "mysql": "5.1.66",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.2.9-multilingual_af_bg_en.mysql.bz2": {
+        "set": "databases",
+        "name": "4.2.9-multilingual_af_bg_en",
+        "civicrm": "4.2.9",
+        "mysql": "5.1.41",
+        "uf": "Drupal",
+        "keyword": "multilingual_af_bg_en"
+    },
+    "databases/4.2.9-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.2.9-setupsh",
+        "civicrm": "4.2.9",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.3.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.3.0-setupsh",
+        "civicrm": "4.3.0",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.4.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.4.0-setupsh",
+        "civicrm": "4.4.0",
+        "mysql": "5.5.25",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.4.5-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.4.5-setupsh",
+        "civicrm": "4.4.5",
+        "mysql": "5.1.66",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.5.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.5.0-setupsh",
+        "civicrm": "4.5.0",
+        "mysql": "5.5.34",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.5.5-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.5.5-setupsh",
+        "civicrm": "4.5.5",
+        "mysql": "5.5.34",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.6.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.6.0-setupsh",
+        "civicrm": "4.6.0",
+        "mysql": "5.5.42",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.6.11-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.6.11-setupsh",
+        "civicrm": "4.6.11",
+        "mysql": "5.5.42",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.6.36-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.6.36-setupsh",
+        "civicrm": "4.6.36",
+        "mysql": "5.5.58",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.7.0-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.7.0-setupsh",
+        "civicrm": "4.7.0",
+        "mysql": "5.5.42",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/4.7.31-setupsh.sql.bz2": {
+        "set": "databases",
+        "name": "4.7.31-setupsh",
+        "civicrm": "4.7.31",
+        "mysql": "5.5.58",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.13.3-multilingual_af_bg_en.mysql.bz2": {
+        "set": "databases",
+        "name": "5.13.3-multilingual_af_bg_en",
+        "civicrm": "5.13.3",
+        "mysql": "5.7.30",
+        "uf": "Drupal",
+        "keyword": "multilingual_af_bg_en"
+    },
+    "databases/5.13.5-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.13.5-setupsh",
+        "civicrm": "5.13.5",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.21.2-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.21.2-setupsh",
+        "civicrm": "5.21.2",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.27.4-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.27.4-setupsh",
+        "civicrm": "5.27.4",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.33.2-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.33.2-setupsh",
+        "civicrm": "5.33.2",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.39.1-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.39.1-setupsh",
+        "civicrm": "5.39.1",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.45.3-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.45.3-setupsh",
+        "civicrm": "5.45.3",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.47.2-tz.mysql.bz2": {
+        "set": "databases",
+        "name": "5.47.2-tz",
+        "civicrm": "5.47.2",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "tz"
+    },
+    "databases/5.69.5-big.mysql.bz2": {
+        "set": "databases",
+        "name": "5.69.5-big",
+        "civicrm": "5.69.5",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "big"
+    },
+    "databases/5.69.5-default.mysql.bz2": {
+        "set": "databases",
+        "name": "5.69.5-default",
+        "civicrm": "5.69.5",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "default"
+    },
+    "databases/5.69.5-small.mysql.bz2": {
+        "set": "databases",
+        "name": "5.69.5-small",
+        "civicrm": "5.69.5",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "small"
+    },
+    "databases/5.7.3-setupsh.mysql.bz2": {
+        "set": "databases",
+        "name": "5.7.3-setupsh",
+        "civicrm": "5.7.3",
+        "mysql": "5.6.47",
+        "uf": "Drupal",
+        "keyword": "setupsh"
+    },
+    "databases/5.75.2-big.mysql.bz2": {
+        "set": "databases",
+        "name": "5.75.2-big",
+        "civicrm": "5.75.2",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "big"
+    },
+    "databases/5.75.2-default.mysql.bz2": {
+        "set": "databases",
+        "name": "5.75.2-default",
+        "civicrm": "5.75.2",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "default"
+    },
+    "databases/5.75.2-small.mysql.bz2": {
+        "set": "databases",
+        "name": "5.75.2-small",
+        "civicrm": "5.75.2",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "small"
+    },
+    "databases/5.81.2-big.mysql.bz2": {
+        "set": "databases",
+        "name": "5.81.2-big",
+        "civicrm": "5.81.2",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "big"
+    },
+    "databases/5.81.2-default.mysql.bz2": {
+        "set": "databases",
+        "name": "5.81.2-default",
+        "civicrm": "5.81.2",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "default"
+    },
+    "databases/5.81.2-small.mysql.bz2": {
+        "set": "databases",
+        "name": "5.81.2-small",
+        "civicrm": "5.81.2",
+        "mysql": "5.7.37",
+        "uf": "Drupal",
+        "keyword": "small"
+    },
+    "databases_standalone/5.77.0-standalone-clean-mysql57.mysql.bz2": {
+        "set": "databases_standalone",
+        "name": "5.77.0-standalone-clean-mysql57",
+        "civicrm": "5.77.0",
+        "mysql": "5.7.37",
+        "uf": "Standalone",
+        "keyword": "standalone-clean-mysql57"
+    }
+}
