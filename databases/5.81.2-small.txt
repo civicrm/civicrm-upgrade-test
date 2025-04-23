@@ -1,0 +1,3 @@
+install drupal-clean
+cv ext:uninstall sequentialcreditnotes financialacls ckeditor4
+cv ext:disable civi_campaign civi_case civi_contribute civi_event civi_mail civi_member civi_pledge civi_report

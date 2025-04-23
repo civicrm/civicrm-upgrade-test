@@ -1,0 +1,6 @@
+install drupal-clean
+
+cv en civicrm_admin_ui civigrant message_admin oauth_client afform_admin user_dashboard  phpstorm scheduled_communications civiimport contributioncancelactions  financialacls legacycustomsearches afform_html
+cv en civi_campaign civi_case civi_contribute civi_event civi_mail civi_member civi_pledge civi_report
+cv en chart_kit civicrm_search_ui ckeditor4 elavon eventcart ewaysingle flexmailer greenwich iframe oembed
+cv en payflowpro recaptcha riverlea search_kit search_kit_reports sequentialcreditnotes tellafriend
