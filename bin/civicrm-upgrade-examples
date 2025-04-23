@@ -26,7 +26,7 @@ function help($error = NULL) {
   if ($error) {
     fwrite(STDERR, $error);
   }
-  echo "usage: $prog [--snapshot-library <folder>] [--json] <fileExpr> ...\n";
+  echo "usage: $prog [--snapshot-library <folder>] [--json] [--all | <fileExpr>...]\n";
   echo "\n";
   echo "<fileExpr> examples:\n";
   echo "  /var/foo.sql.gz  A specific file\n";
@@ -49,6 +49,7 @@ function main($args) {
   // default value. may be overridden by a --snapshot-library arg
   $snapshotLibrary = 'databases';
   $printer = 'print_text';
+  $projectDir = dirname(__DIR__);
 
   while (!empty($args)) {
     $arg = array_shift($args);
@@ -58,6 +59,12 @@ function main($args) {
     }
     elseif ($arg === '--json') {
        $printer = 'print_json';
+    }
+    elseif($arg === '--all') {
+      $files = array_merge(
+        $files,
+        (array) glob("$projectDir/databases*/*.bz2"),
+      );
     }
     elseif ($arg[0] === '-') {
       help("Unrecognized option: $arg\n");
