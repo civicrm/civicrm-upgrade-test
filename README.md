@@ -70,6 +70,7 @@ number. For example:
 
 ```bash
 mysqldump my_civi_db | bzip2 > databases/4.2.3-my_civi_db.sql.bz2
+./scripts/update-json.php
 ```
 
 This is not strictly required. If you want to create private test-cases,
