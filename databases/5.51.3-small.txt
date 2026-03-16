@@ -1,0 +1,3 @@
+install drupal-clean
+cv ext:uninstall sequentialcreditnotes financialacls ckeditor4 legacycustomsearches recaptcha eventcart contributioncancelactions
+cv vset enable_components='{}'

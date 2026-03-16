@@ -1,0 +1,3 @@
+install drupal-clean
+cv vset enable_components='["CiviCampaign","CiviCase","CiviContribute","CiviEvent","CiviMail","CiviMember","CiviPledge","CiviReport"]'
+cv en afform_admin afform_html authx civicrm_admin_ui civigrant ckeditor4 contributioncancelactions eventcart ewaysingle financialacls legacycustomsearches message_admin oauth-client payflowpro recaptcha search_kit sequentialcreditnotes
