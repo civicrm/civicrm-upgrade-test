@@ -1,0 +1,7 @@
+install standalone-clean
+login
+enable multilingual
+add fr_FR
+add nl_NL
+ensure all 3 languages are "Active"
+edit an `Event` to use translated description
