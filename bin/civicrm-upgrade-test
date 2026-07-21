@@ -201,8 +201,10 @@ for SQLBZ2 in $DATABASE_FILES ; do
   fi
   pushd "$WEB_ROOT" > /dev/null
   rm -f $LOGPAT
+  echo; echo "Check web upgrade page can render $TEST_DATABASE"
+  cv ev 'echo CRM_Core_Invoke::run(["civicrm", "upgrade"]);' > "$OUTPUT" 2>&1
   echo; echo "Upgrading database $TEST_DATABASE"
-  cv upgrade:db -vv --no-interaction > "$OUTPUT" 2>&1
+  cv upgrade:db -vv --no-interaction >> "$OUTPUT" 2>&1
   echo "LOGPAT: $LOGPAT" > $LOG
   cat $LOGPAT >> $LOG
   popd > /dev/null
